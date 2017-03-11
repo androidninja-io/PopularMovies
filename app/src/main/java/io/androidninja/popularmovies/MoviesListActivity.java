@@ -7,6 +7,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.orhanobut.logger.Logger;
+import io.androidninja.popularmovies.data.Movie;
+import io.androidninja.popularmovies.data.MovieResponseData;
+import io.androidninja.popularmovies.data.source.MoviesDataSource;
+import java.util.List;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MoviesListActivity extends AppCompatActivity {
 
@@ -19,6 +29,30 @@ public class MoviesListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movies_list);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+
+        Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl("http://api.themoviedb.org/3/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+        MoviesDataSource moviesDataSource = retrofit.create(MoviesDataSource.class);
+        Call<MovieResponseData> call = moviesDataSource.getMovies("popular", "89ec2480f6ed6cbf83e6033b2e1fd2c7", 1);
+        call.enqueue(new Callback<MovieResponseData>() {
+            @Override
+            public void onResponse(Call<MovieResponseData> call, Response<MovieResponseData> response) {
+                if(response.isSuccessful()) {
+                    MovieResponseData data = response.body();
+                    List<Movie> movies = data.getResults();
+                    for(Movie movie : movies) {
+                        Logger.d(movie);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MovieResponseData> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override
