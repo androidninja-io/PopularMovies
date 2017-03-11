@@ -1,4 +1,7 @@
 # PopularMovies
+
+This project will be used for Stage 1 and Stage 2 of the PopularMovies task which is part of the Udacity Associate Android Developer Fast Track Program
+
 ## This app will:
 1. Present the user with a grid arrangement of movie posters upon launch.  
 2. Allow your user to change sort order via a setting:    
